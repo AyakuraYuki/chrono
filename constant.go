@@ -6,6 +6,7 @@ import "time"
 const Version = "1.0.0"
 
 // timezone constants
+// 时区常量
 const (
 	Local = "Local" // 本地时间
 	UTC   = "UTC"   // 世界协调时间

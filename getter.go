@@ -16,7 +16,7 @@ func (t Time) StdTime() time.Time {
 }
 
 func (t Time) DaysInYear() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	if t.IsLeapYear() {
@@ -26,35 +26,35 @@ func (t Time) DaysInYear() int {
 }
 
 func (t Time) DaysInMonth() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.EndOfMonth().StdTime().Day()
 }
 
 func (t Time) MonthOfYear() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return int(t.StdTime().Month())
 }
 
 func (t Time) DayOfYear() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().YearDay()
 }
 
 func (t Time) DayOfMonth() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Day()
 }
 
 func (t Time) DayOfWeek() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	day := t.StdTime().Weekday()
@@ -65,7 +65,7 @@ func (t Time) DayOfWeek() int {
 }
 
 func (t Time) WeekOfYear() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	_, week := t.StdTime().ISOWeek()
@@ -73,7 +73,7 @@ func (t Time) WeekOfYear() int {
 }
 
 func (t Time) WeekOfMonth() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	days := t.Day() + t.StartOfMonth().DayOfWeek() - 1
@@ -84,7 +84,7 @@ func (t Time) WeekOfMonth() int {
 }
 
 func (t Time) DateTime() (year, month, day, hour, minute, second int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	year, month, day = t.Date()
@@ -93,7 +93,7 @@ func (t Time) DateTime() (year, month, day, hour, minute, second int) {
 }
 
 func (t Time) DateTimeMilli() (year, month, day, hour, minute, second, millisecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	year, month, day, hour, minute, second = t.DateTime()
@@ -102,7 +102,7 @@ func (t Time) DateTimeMilli() (year, month, day, hour, minute, second, milliseco
 }
 
 func (t Time) DateTimeMicro() (year, month, day, hour, minute, second, microsecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	year, month, day, hour, minute, second = t.DateTime()
@@ -111,7 +111,7 @@ func (t Time) DateTimeMicro() (year, month, day, hour, minute, second, microseco
 }
 
 func (t Time) DateTimeNano() (year, month, day, hour, minute, second, nanosecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	year, month, day, hour, minute, second = t.DateTime()
@@ -120,7 +120,7 @@ func (t Time) DateTimeNano() (year, month, day, hour, minute, second, nanosecond
 }
 
 func (t Time) Date() (year, month, day int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	var tm time.Month
@@ -129,7 +129,7 @@ func (t Time) Date() (year, month, day int) {
 }
 
 func (t Time) DateMilli() (year, month, day, millisecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	year, month, day = t.Date()
@@ -138,7 +138,7 @@ func (t Time) DateMilli() (year, month, day, millisecond int) {
 }
 
 func (t Time) DateMicro() (year, month, day, microsecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	year, month, day = t.Date()
@@ -147,7 +147,7 @@ func (t Time) DateMicro() (year, month, day, microsecond int) {
 }
 
 func (t Time) DateNano() (year, month, day, nanosecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	year, month, day = t.Date()
@@ -156,14 +156,14 @@ func (t Time) DateNano() (year, month, day, nanosecond int) {
 }
 
 func (t Time) Time() (hour, minute, second int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	return t.StdTime().Clock()
 }
 
 func (t Time) TimeMilli() (hour, minute, second, millisecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	hour, minute, second = t.Time()
@@ -172,7 +172,7 @@ func (t Time) TimeMilli() (hour, minute, second, millisecond int) {
 }
 
 func (t Time) TimeMicro() (hour, minute, second, microsecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	hour, minute, second = t.Time()
@@ -181,7 +181,7 @@ func (t Time) TimeMicro() (hour, minute, second, microsecond int) {
 }
 
 func (t Time) TimeNano() (hour, minute, second, nanosecond int) {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return
 	}
 	hour, minute, second = t.Time()
@@ -190,28 +190,28 @@ func (t Time) TimeNano() (hour, minute, second, nanosecond int) {
 }
 
 func (t Time) Century() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.Year()/YearsPerCentury + 1
 }
 
 func (t Time) Decade() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.Year() % YearsPerCentury / YearsPerDecade * YearsPerDecade
 }
 
 func (t Time) Year() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Year()
 }
 
 func (t Time) Quarter() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	month := t.Month()
@@ -233,7 +233,7 @@ func (t Time) Month() int {
 }
 
 func (t Time) Week() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return -1
 	}
 	return (t.DayOfWeek() + DaysPerWeek - int(t.weekStartsAt)) % DaysPerWeek
@@ -244,84 +244,84 @@ func (t Time) Day() int {
 }
 
 func (t Time) Hour() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Hour()
 }
 
 func (t Time) Minute() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Minute()
 }
 
 func (t Time) Second() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Second()
 }
 
 func (t Time) Millisecond() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Nanosecond() / 1e6
 }
 
 func (t Time) Microsecond() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Nanosecond() / 1e3
 }
 
 func (t Time) Nanosecond() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Nanosecond()
 }
 
 func (t Time) Timestamp() int64 {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().Unix()
 }
 
 func (t Time) TimestampMilli() int64 {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().UnixMilli()
 }
 
 func (t Time) TimestampMicro() int64 {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().UnixMicro()
 }
 
 func (t Time) TimestampNano() int64 {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	return t.StdTime().UnixNano()
 }
 
 func (t Time) Timezone() string {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return ""
 	}
 	return t.loc.String()
 }
 
 func (t Time) ZoneName() string {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return ""
 	}
 	name, _ := t.StdTime().Zone()
@@ -329,7 +329,7 @@ func (t Time) ZoneName() string {
 }
 
 func (t Time) ZoneOffset() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	_, offset := t.StdTime().Zone()
@@ -337,28 +337,28 @@ func (t Time) ZoneOffset() int {
 }
 
 func (t Time) Locale() string {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return ""
 	}
 	return t.lang.locale
 }
 
 func (t Time) WeekStartsAt() string {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return ""
 	}
 	return t.weekStartsAt.String()
 }
 
 func (t Time) CurrentLayout() string {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return ""
 	}
 	return t.layout
 }
 
 func (t Time) Age() int {
-	if t.IsInvalid() {
+	if t.HasError() {
 		return 0
 	}
 	birth := t

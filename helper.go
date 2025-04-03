@@ -6,6 +6,7 @@ import (
 )
 
 // week days
+// 星期
 var weekdays = map[string]time.Weekday{
 	Monday:    time.Monday,
 	Tuesday:   time.Tuesday,
@@ -17,6 +18,7 @@ var weekdays = map[string]time.Weekday{
 }
 
 // format map
+// 格式符号映射表
 var formatMap = map[byte]string{
 	'd': "02",      // Day:    Day of the month, 2 digits with leading zeros. Eg: 01 to 31.
 	'D': "Mon",     // Day:    A textual representation of a day, three letters. Eg: Mon through Sun.
@@ -52,34 +54,43 @@ var formatMap = map[byte]string{
 }
 
 // default layouts
+// 默认布局模板
 var defaultLayouts = []string{
-	DateTimeLayout, DateLayout, TimeLayout,
-	ISO8601Layout, DayDateTimeLayout, ISO8601NanoLayout,
-	DateTimeNanoLayout, ShortDateTimeLayout, ShortDateTimeNanoLayout,
-	DateLayout, DateNanoLayout, ShortDateLayout, ShortDateNanoLayout,
-	TimeMicroLayout, TimeMilliLayout, TimeNanoLayout,
-	RFC822Layout, RFC822ZLayout, RFC850Layout, RFC1123Layout, RFC1123ZLayout, RFC3339Layout, RFC3339NanoLayout, RFC1036Layout, RFC7231Layout,
-	KitchenLayout,
-	CookieLayout,
-	ANSICLayout,
-	UnixDateLayout,
-	RubyDateLayout,
+	DateTimeLayout, DateLayout, TimeLayout, DayDateTimeLayout,
+
+	"2006-01-02 15:04:05 -0700 MST", "2006-01-02T15:04:05Z07:00", "2006-01-02T15:04:05-07:00", "2006-01-02T15:04:05-0700", "2006-01-02T15:04:05",
+
+	ISO8601Layout, RFC1036Layout, RFC822Layout, RFC822ZLayout, RFC850Layout, RFC1123Layout, RFC1123ZLayout, RFC3339Layout, RFC7231Layout,
+	KitchenLayout, CookieLayout, ANSICLayout, UnixDateLayout, RubyDateLayout,
+
+	ShortDateTimeLayout, ShortDateLayout, ShortTimeLayout,
+
+	DateTimeMilliLayout, DateTimeMicroLayout, DateTimeNanoLayout,
+	DateMilliLayout, DateMicroLayout, DateNanoLayout,
+	TimeMilliLayout, TimeMicroLayout, TimeNanoLayout,
+
+	ShortDateTimeMilliLayout, ShortDateTimeMicroLayout, ShortDateTimeNanoLayout,
+	ShortDateMilliLayout, ShortDateMicroLayout, ShortDateNanoLayout,
+	ShortTimeMilliLayout, ShortTimeMicroLayout, ShortTimeNanoLayout,
+
+	ISO8601MilliLayout, ISO8601MicroLayout, ISO8601NanoLayout,
+	RFC3339MilliLayout, RFC3339MicroLayout, RFC3339NanoLayout,
+
 	"2006",
+	"2006-1-2 15:4:5 -0700 MST", "2006-1-2 3:4:5 -0700 MST",
 	"2006-1", "2006-1-2", "2006-1-2 15", "2006-1-2 15:4", "2006-1-2 15:4:5", "2006-1-2 15:4:5.999999999",
 	"2006.1", "2006.1.2", "2006.1.2 15", "2006.1.2 15:4", "2006.1.2 15:4:5", "2006.1.2 15:4:5.999999999",
 	"2006/1", "2006/1/2", "2006/1/2 15", "2006/1/2 15:4", "2006/1/2 15:4:5", "2006/1/2 15:4:5.999999999",
-	"2006-01-02 15:04:05 -0700 MST",
 	"2006-01-02 15:04:05PM MST", "2006-01-02 15:04:05.999999999PM MST", "2006-1-2 15:4:5PM MST", "2006-1-2 15:4:5.999999999PM MST",
 	"2006-01-02 15:04:05 PM MST", "2006-01-02 15:04:05.999999999 PM MST", "2006-1-2 15:4:5 PM MST", "2006-1-2 15:4:5.999999999 PM MST",
 	"1/2/2006", "1/2/2006 15", "1/2/2006 15:4", "1/2/2006 15:4:5", "1/2/2006 15:4:5.999999999",
-	"2006-1-2 15:4:5 -0700 MST", "2006-1-2 15:4:5.999999999 -0700 MST", "2006-1-2 15:04:05 -0700 MST", "2006-1-2 15:04:05.999999999 -0700 MST",
-	"2006-01-02T15:04:05", "2006-01-02T15:04:05.999999999", "2006-1-2T3:4:5", "2006-1-2T3:4:5.999999999",
-	"2006-01-02T15:04:05Z07", "2006-01-02T15:04:05.999999999Z07", "2006-1-2T15:4:5Z07", "2006-1-2T15:4:5.999999999Z07",
-	"2006-01-02T15:04:05Z07:00", "2006-01-02T15:04:05.999999999Z07:00", "2006-1-2T15:4:5Z07:00", "2006-1-2T15:4:5.999999999Z07:00",
-	"2006-01-02T15:04:05-07:00", "2006-01-02T15:04:05.999999999-07:00", "2006-1-2T15:4:5-07:00", "2006-1-2T15:4:5.999999999-07:00",
-	"2006-01-02T15:04:05-0700", "2006-01-02T15:04:05.999999999-0700", "2006-1-2T3:4:5-0700", "2006-1-2T3:4:5.999999999-0700",
+	"2006-1-2 15:4:5.999999999 -0700 MST", "2006-1-2 15:04:05 -0700 MST", "2006-1-2 15:04:05.999999999 -0700 MST",
+	"2006-01-02T15:04:05.999999999", "2006-1-2T3:4:5", "2006-1-2T3:4:5.999999999",
+	"2006-01-02T15:04:05.999999999Z07", "2006-1-2T15:4:5Z07", "2006-1-2T15:4:5.999999999Z07",
+	"2006-01-02T15:04:05.999999999Z07:00", "2006-1-2T15:4:5Z07:00", "2006-1-2T15:4:5.999999999Z07:00",
+	"2006-01-02T15:04:05.999999999-07:00", "2006-1-2T15:4:5-07:00", "2006-1-2T15:4:5.999999999-07:00",
+	"2006-01-02T15:04:05.999999999-0700", "2006-1-2T3:4:5-0700", "2006-1-2T3:4:5.999999999-0700",
 	"20060102150405-07:00", "20060102150405.999999999-07:00",
-	"20060102150405Z07", "20060102150405.999999999Z07",
 	"20060102150405Z07:00", "20060102150405.999999999Z07:00",
 }
 

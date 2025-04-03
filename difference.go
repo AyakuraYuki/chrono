@@ -1,13 +1,9 @@
 package chrono
 
 import (
+	"math"
 	"strings"
 	"time"
-)
-
-var (
-	minimumDuration time.Duration = -1 << 63
-	maximumDuration time.Duration = 1<<63 - 1
 )
 
 // DiffInYears gets the difference in years
@@ -16,7 +12,9 @@ func (t Time) DiffInYears(rhs ...Time) int64 {
 	if len(rhs) > 0 {
 		end = rhs[0]
 	}
-	diffY, diffM, diffD := end.Year()-start.Year(), end.Month()-start.Month(), end.Day()-start.Day()
+	diffY := end.Year() - start.Year()
+	diffM := end.Month() - start.Month()
+	diffD := end.Day() - start.Day()
 	if diffM < 0 || (diffM == 0 && diffD < 0) {
 		diffY--
 	}
@@ -33,25 +31,151 @@ func (t Time) DiffAbsInYears(rhs ...Time) int64 {
 
 // DiffInMonths gets the difference in months
 func (t Time) DiffInMonths(rhs ...Time) int64 {
-	start, end := t, t.Now()
+	start, end := t, Now(t.Timezone())
 	if len(rhs) > 0 {
 		end = rhs[0]
 	}
 	if start.Year() == end.Year() && start.Month() == end.Month() {
 		return 0
 	}
-	diffD := s
+	diffD := start.DiffInDays(end)
+	if diffD <= 0 {
+		return -1 * diffInMonths(end, start)
+	}
+	return diffInMonths(start, end)
 }
 
-func (t Time) DiffForHumans(rhs ...Time) string {
-	end := t.Now()
+func (t Time) DiffAbsInMonths(rhs ...Time) int64 {
+	return getAbsValue(t.DiffInMonths(rhs...))
+}
+
+func (t Time) DiffInWeeks(rhs ...Time) int64 {
+	start, end := t, Now(t.Timezone())
 	if len(rhs) > 0 {
 		end = rhs[0]
 	}
-	if t.HasError() || end.HasError() {
+	if start.IsInvalid() || end.IsInvalid() {
+		return 0
+	}
+	return int64(math.Floor(float64((end.Timestamp() - start.Timestamp()) / (7 * 24 * 3600))))
+}
+
+func (t Time) DiffAbsInWeeks(rhs ...Time) int64 {
+	return getAbsValue(t.DiffInWeeks(rhs...))
+}
+
+func (t Time) DiffInDays(rhs ...Time) int64 {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
+		return 0
+	}
+	return int64(math.Floor(float64((end.Timestamp() - start.Timestamp()) / (24 * 3600))))
+}
+
+func (t Time) DiffAbsInDays(rhs ...Time) int64 {
+	return getAbsValue(t.DiffInDays(rhs...))
+}
+
+func (t Time) DiffInHours(rhs ...Time) int64 {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
+		return 0
+	}
+	return start.DiffInSeconds(end) / SecondsPerHour
+}
+
+func (t Time) DiffAbsInHours(rhs ...Time) int64 {
+	return getAbsValue(t.DiffInHours(rhs...))
+}
+
+func (t Time) DiffInMinutes(rhs ...Time) int64 {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
+		return 0
+	}
+	return start.DiffInSeconds(end) / SecondsPerMinute
+}
+
+func (t Time) DiffAbsInMinutes(rhs ...Time) int64 {
+	return getAbsValue(t.DiffInMinutes(rhs...))
+}
+
+func (t Time) DiffInSeconds(rhs ...Time) int64 {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
+		return 0
+	}
+	return end.Timestamp() - start.Timestamp()
+}
+
+func (t Time) DiffAbsInSeconds(rhs ...Time) int64 {
+	return getAbsValue(t.DiffInSeconds(rhs...))
+}
+
+func (t Time) DiffInString(rhs ...Time) string {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
 		return ""
 	}
-	unit, value := t.diff(end)
+	unit, value := start.diff(end)
+	return t.lang.translate(unit, value)
+}
+
+func (t Time) DiffAbsInString(rhs ...Time) string {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
+		return ""
+	}
+	unit, value := start.diff(end)
+	return t.lang.translate(unit, getAbsValue(value))
+}
+
+func (t Time) DiffInDuration(rhs ...Time) time.Duration {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
+		return 0
+	}
+	return end.StdTime().Sub(start.StdTime())
+}
+
+func (t Time) DiffAbsInDuration(rhs ...Time) time.Duration {
+	d := t.DiffInDuration(rhs...)
+	if d >= 0 {
+		return d
+	}
+	return -d
+}
+
+func (t Time) DiffForHumans(rhs ...Time) string {
+	start, end := t, Now(t.Timezone())
+	if len(rhs) > 0 {
+		end = rhs[0]
+	}
+	if start.IsInvalid() || end.IsInvalid() {
+		return ""
+	}
+	unit, value := start.diff(end)
 	translation := t.lang.translate(unit, getAbsValue(value))
 	if unit == "now" {
 		return translation
@@ -91,11 +215,15 @@ func (t Time) diff(end Time) (unit string, value int64) {
 }
 
 func diffInMonths(start, end Time) int64 {
-	y, m, d, h, i, s, ns := start.DateTimeNano()
-	endY, endM, _ := end.Date()
+	if start.IsInvalid() || end.IsInvalid() {
+		return 0
+	}
 
-	diffY := endY - y
-	diffM := endM - m
+	y, m, d, h, i, s, ns := start.DateTimeNano()
+	endYear, endMonth, _ := end.Date()
+
+	diffY := endYear - y
+	diffM := endMonth - m
 	totalM := diffY*12 + diffM
 
 	if time.Date(y, time.Month(m+totalM), d, h, i, s, ns, start.StdTime().Location()).After(end.StdTime()) {
