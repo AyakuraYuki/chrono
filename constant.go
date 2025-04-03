@@ -292,3 +292,35 @@ const (
 	TimestampMicroFormat = "V"
 	TimestampNanoFormat  = "X"
 )
+
+// locale constants
+const (
+	ARLocale   = "ar"    // Arabic
+	BGLocale   = "bg"    // Bulgarian
+	DELocale   = "de"    // German
+	DKLocale   = "dk"    // Dansk
+	ENLocale   = "en"    // English
+	ESLocale   = "es"    // Spanish
+	FALocale   = "fa"    // Farsi
+	FRLocale   = "fr"    // French
+	HILocale   = "hi"    // Hindi
+	HULocale   = "hu"    // Hungarian
+	IDLocale   = "id"    // Indonesian
+	ITLocale   = "it"    // Italian
+	JPLocale   = "jp"    // Japanese
+	KRLocale   = "kr"    // Korean
+	MsMYLocale = "ms-MY" // Bahasa Malaysia
+	NBLocale   = "nb"    // Norwegian
+	NLLocale   = "nl"    // Dutch
+	PLLocale   = "pl"    // Polish
+	PTLocale   = "pt"    // Portuguese
+	ROLocale   = "ro"    // Romanian
+	RULocale   = "ru"    // Russian
+	SELocale   = "se"    // Swedish
+	THLocale   = "th"    // Thailand
+	TRLocale   = "tr"    // Turkish
+	UKLocale   = "uk"    // Ukrainian
+	VILocale   = "vi"    // Vietnamese
+	ZhCNLocale = "zh-CN" // Simplified Chinese
+	ZhTWLocale = "zh-TW" // Traditional Chinese
+)
