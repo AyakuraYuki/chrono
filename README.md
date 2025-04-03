@@ -2,6 +2,8 @@
 
 > chronosphere activated
 
+> inspired by `dromara/carbon`
+
 A simple, semantic time package for Golang.
 
 ## Installation
